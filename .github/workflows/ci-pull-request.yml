@@ -1,0 +1,46 @@
+name: Pull Request
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency: ci-pr-${{ github.event.number }}
+
+jobs:
+  ci-lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: latest
+          args: --timeout=3m --verbose --enable=gosec --exclude=G404 --exclude=G101
+
+  ci-unit-test:
+    name: Unit test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.21
+      - name: Build
+        run: make build
+      - name: Test
+        run: |
+          go install gotest.tools/gotestsum@latest
+          gotestsum --format pkgname --hide-summary=skipped
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs:
+      - ci-lint
+      - ci-unit-test
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build docker
+        run: make docker-build

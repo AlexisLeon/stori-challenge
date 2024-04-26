@@ -1,19 +1,19 @@
 # Dependencies Container
-FROM golang:1.21 as build
+FROM golang:1.21-alpine as build
+RUN apk add make
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+
 WORKDIR /go/src/app
 
-COPY go.mod .
-COPY go.sum .
+# pull deps
+COPY go.mod go.sum ./
+# RUN make deps
 
-RUN go mod download
+# build
+COPY . /go/src/app/
+RUN make build
 
-COPY . /go/src/app
-RUN go build -o /go/bin/app main.go
-
-FROM gcr.io/distroless/static
-RUN adduser -D -u 1000 stori
-
-COPY --from=build /go/bin/app /
-
-USER stori
-ENTRYPOINT ["/app"]
+FROM gcr.io/distroless/static:nonroot
+COPY --from=build /go/src/app /
+ENTRYPOINT ["/stori-api"]
