@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/alexisleon/stori/internal/conf"
+	"github.com/alexisleon/stori/internal/models"
 	"io"
-	"stori/internal/models"
 	"strconv"
 	"strings"
 	"time"
@@ -16,7 +17,13 @@ const csvFileContents = `ID,Date,Amount
 4,2024-01-03,-20.46
 4,2024-01-04,+10`
 
+func init() {
+	conf.LoadConfig()
+}
+
 func main() {
+	fmt.Println("using default config", conf.GetConfig())
+
 	strInput := strings.NewReader(csvFileContents)
 	reader := csv.NewReader(strInput)
 

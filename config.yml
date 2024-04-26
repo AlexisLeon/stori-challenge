@@ -1,0 +1,11 @@
+mailer:
+  replyTo: help@storicard.com
+  source: no-reply@storicard.com
+
+# Database credentials
+database:
+  host: localhost
+  database: postgres
+  port: 5432
+  user: postgres
+  password: 123
