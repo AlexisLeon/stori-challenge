@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/alexisleon/stori/internal/calculator"
 	"github.com/alexisleon/stori/internal/conf"
 	"github.com/alexisleon/stori/internal/models"
 	"io"
@@ -23,6 +24,14 @@ func init() {
 
 func main() {
 	fmt.Println("using default config", conf.GetConfig())
+
+	report := models.CSVSettlementReport{
+		User: &models.User{
+			ID:    0,
+			Email: "test@storicard.com",
+		},
+		Transactions: make([]*models.CSVSettlementTransaction, 0),
+	}
 
 	strInput := strings.NewReader(csvFileContents)
 	reader := csv.NewReader(strInput)
@@ -64,12 +73,25 @@ func main() {
 		data := models.CSVSettlementTransaction{
 			ID:        row[0],
 			Date:      date,
-			Amount:    amount,
+			RawAmount: amount,
 			Direction: direction,
 		}
 
-		fmt.Println(row, data)
+		report.Transactions = append(report.Transactions, &data)
 
 		// TODO: Save to persistent storage
 	}
+
+	summary := calculator.NewSummaryCalculator().CalculateSummaryTransaction(&report)
+	// print summary
+	fmt.Println("Balance", summary.Balance)
+	fmt.Println("TotalTransactions", summary.TotalTransactions)
+	for _, month := range summary.Months {
+		fmt.Print("\n\n")
+		fmt.Println("Date:", month.Year, month.Month)
+		fmt.Println("TotalTransactions", month.TotalTransactions)
+		fmt.Println("AverageDebit", month.AverageDebit)
+		fmt.Println("AverageCredit", month.AverageCredit)
+	}
+	// send email
 }

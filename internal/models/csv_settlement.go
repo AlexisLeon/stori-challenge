@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"github.com/alexisleon/stori/internal/util/money"
+	"math"
+	"time"
+)
 
 type CSVSettlementTransactionDirection string
 
@@ -13,13 +17,21 @@ const (
 )
 
 type CSVSettlementTransaction struct {
-	ID        string
-	Date      time.Time
-	Amount    float64
+	ID   string
+	Date time.Time
+
+	RawAmount float64
+
 	Direction CSVSettlementTransactionDirection
 }
 
+func (t CSVSettlementTransaction) Amount() money.Money {
+	// convert +- to Money
+	abs := math.Abs(t.RawAmount)
+	return money.Float64(abs)
+}
+
 type CSVSettlementReport struct {
-	User        *User
-	Transaction []CSVSettlementTransaction
+	User         *User
+	Transactions []*CSVSettlementTransaction
 }
