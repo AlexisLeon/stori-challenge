@@ -17,4 +17,4 @@ RUN make build
 FROM gcr.io/distroless/static:nonroot
 COPY config.yml /
 COPY --from=build /go/src/app /
-ENTRYPOINT ["/stori-api"]
+ENTRYPOINT ["/stori"]

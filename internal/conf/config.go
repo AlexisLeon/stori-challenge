@@ -22,8 +22,12 @@ type Config struct {
 
 var conf = &Config{}
 
-func LoadConfig() {
-	f, err := os.Open("config.yml")
+func LoadConfig(configFile string) {
+	if configFile == "" {
+		configFile = "config.yml"
+	}
+
+	f, err := os.Open(configFile)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "failed to read conf file `config.yml`")
 		fmt.Fprintln(os.Stderr, err.Error())
