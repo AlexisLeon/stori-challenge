@@ -34,7 +34,9 @@ func NewSummaryCalculator() *SummaryCalculator {
 }
 
 func (c SummaryCalculator) CalculateSummaryTransaction(r *models.CSVSettlementReport) *models.TransactionSummary {
-	summary := &models.TransactionSummary{}
+	summary := &models.TransactionSummary{
+		User: r.User,
+	}
 
 	// sort transactions by date
 	sort.Slice(r.Transactions, func(i, j int) bool {
