@@ -4,8 +4,4 @@ mailer:
 
 # Database credentials
 database:
-  host: localhost
-  database: postgres
-  port: 5432
-  user: postgres
-  password: 123
+  url: postgres://localhost:5432/postgres

@@ -12,17 +12,13 @@ type Config struct {
 		Source  string `yaml:"source"`
 	}
 	Database struct {
-		Host     string `yaml:"host"`
-		Database string `yaml:"database"`
-		Port     int    `yaml:"port"`
-		User     string `yaml:"user"`
-		Password string `yaml:"password"`
+		URL string `yaml:"url"`
 	} `yaml:"database"`
 }
 
 var conf = &Config{}
 
-func LoadConfig(configFile string) {
+func LoadConfig(configFile string) *Config {
 	if configFile == "" {
 		configFile = "config.yml"
 	}
@@ -42,6 +38,8 @@ func LoadConfig(configFile string) {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
+
+	return conf
 }
 
 func GetConfig() Config {

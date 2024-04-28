@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"bytes"
-	"context"
 	"encoding/csv"
 	"fmt"
 	"github.com/alexisleon/stori/internal/calculator"
@@ -27,11 +26,11 @@ const csvFileContents = `ID,Date,Amount
 var templateCmd = cobra.Command{
 	Use: "template",
 	Run: func(cmd *cobra.Command, args []string) {
-		template(cmd.Context())
+		template()
 	},
 }
 
-func template(ctx context.Context) {
+func template() {
 	conf.LoadConfig(configFile)
 
 	report := models.CSVSettlementReport{
