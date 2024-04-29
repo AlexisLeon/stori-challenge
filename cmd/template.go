@@ -35,7 +35,6 @@ func template() {
 
 	report := models.CSVSettlementReport{
 		User: &models.User{
-			ID:    0,
 			Email: "test@storicard.com",
 		},
 		Transactions: make([]*models.CSVSettlementTransaction, 0),
