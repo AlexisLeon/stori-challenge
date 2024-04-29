@@ -18,6 +18,7 @@ type TransactionSummaryMonth struct {
 
 type TransactionSummary struct {
 	User              *User
+	Account           *Account
 	Balance           money.Money
 	TotalTransactions int
 

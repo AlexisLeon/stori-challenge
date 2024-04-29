@@ -87,12 +87,19 @@ func (h *SettlementHandler) ProcessSettlement() error {
 		}
 	}
 
+	// get the final balance
+	account, err := models.GetAccount(h.db)
+	if err != nil {
+		return errors.Wrap(err, "get account")
+	}
+
 	report := models.CSVSettlementReport{
 		User:         user,
 		Transactions: settlementReader.Rows(),
 	}
 
 	summary := calculator.NewSummaryCalculator().CalculateSummaryTransaction(&report)
+	summary.Account = account
 
 	err = h.mailer.SendSummary(summary)
 	if err != nil {

@@ -1,5 +1,11 @@
 package money
 
+import (
+	"fmt"
+	"github.com/dustin/go-humanize"
+	"math"
+)
+
 type Money int64
 
 func Float64(amount float64) Money {
@@ -13,4 +19,13 @@ func (m Money) Int64() int64 {
 
 func (m Money) Int() int {
 	return int(m)
+}
+
+func (m Money) Format() string {
+	s := humanize.Commaf(math.Abs(float64(m)) / 100)
+	if m < 0 {
+		return fmt.Sprintf("-$%s", s)
+	}
+
+	return fmt.Sprintf("$%s", s)
 }
