@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/alexisleon/stori/internal/conf"
+	"github.com/alexisleon/stori/internal/storage"
 	"github.com/gobuffalo/pop"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -19,19 +20,9 @@ var migrateCmd = cobra.Command{
 // I would normally use something like github.com/golang-migrate/migrate for migrations
 // In this case I wanted to try out https://github.com/gobuffalo/pop
 func migrate() {
-	globalConf := conf.LoadConfig(configFile)
+	c := conf.LoadConfig(configFile)
 
-	connDets := &pop.ConnectionDetails{
-		Dialect: "postgres",
-		URL:     globalConf.Database.URL,
-		// options that will be passed to each migration file
-		Options: map[string]string{
-			"Namespace":            "alexisleon_stori",
-			"migration_table_name": "schema_migrations",
-		},
-	}
-
-	db, err := pop.NewConnection(connDets)
+	db, err := storage.Connect(c)
 	if err != nil {
 		log.Fatalf("%+v", errors.Wrap(err, "failed to open db connection"))
 	}
@@ -43,7 +34,7 @@ func migrate() {
 
 	migrationsPath := "db/migrations"
 	log.Printf("Reading migrations from %s\n", migrationsPath)
-	fileMigrator, err := pop.NewFileMigrator(migrationsPath, db)
+	fileMigrator, err := pop.NewFileMigrator(migrationsPath, db.Connection)
 	if err != nil {
 		log.Fatalf("%+v", errors.Wrap(err, "failed to migrate db"))
 	}
