@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/alexisleon/stori/internal/util/money"
+	"github.com/gofrs/uuid"
 	"math"
 	"time"
 )
@@ -17,7 +18,7 @@ const (
 )
 
 type CSVSettlementTransaction struct {
-	ID   string
+	ID   uuid.UUID
 	Date time.Time
 
 	RawAmount float64

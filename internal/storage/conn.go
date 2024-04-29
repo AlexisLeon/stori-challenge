@@ -16,7 +16,7 @@ func Connect(c *conf.Config) (*Conn, error) {
 		URL:     c.Database.URL,
 		// options that will be passed to each migration file
 		Options: map[string]string{
-			"Namespace":            "alexisleon_stori",
+			"Namespace":            "public",
 			"migration_table_name": "schema_migrations",
 		},
 
@@ -33,4 +33,11 @@ func Connect(c *conf.Config) (*Conn, error) {
 	}
 
 	return &Conn{conn}, nil
+}
+
+// StartTransaction is required to be able to use our Conn struct
+func (c *Conn) StartTransaction(fn func(*Conn) error) error {
+	return c.Transaction(func(tx *pop.Connection) error {
+		return fn(&Conn{tx})
+	})
 }

@@ -3,6 +3,7 @@ package csv_reader
 import (
 	"fmt"
 	"github.com/alexisleon/stori/internal/models"
+	"github.com/gofrs/uuid"
 	"strconv"
 	"time"
 )
@@ -46,8 +47,13 @@ func (r *settlementReportReader) ReadRow(columns []string) error {
 		direction = models.CSVSettlementTransactionDirectionInbound
 	}
 
+	id, err := uuid.FromString(columns[0])
+	if err != nil {
+		return err
+	}
+
 	data := models.CSVSettlementTransaction{
-		ID:        columns[0],
+		ID:        id,
 		Date:      date,
 		RawAmount: amount,
 		Direction: direction,

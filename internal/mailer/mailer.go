@@ -7,9 +7,6 @@ import (
 	"github.com/alexisleon/stori/internal/models"
 )
 
-type MailClient interface {
-}
-
 type Mailer interface {
 	SendSummary(summary *models.TransactionSummary) error
 }
