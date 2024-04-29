@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -10,7 +9,7 @@ var configFile string
 var rootCmd = cobra.Command{
 	Use: "stori",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Hello, world!")
+		settlement()
 	},
 }
 
