@@ -14,7 +14,7 @@ var rootCmd = cobra.Command{
 }
 
 func RootCmd() *cobra.Command {
-	rootCmd.AddCommand(&migrateCmd, &settlementCmd)
+	rootCmd.AddCommand(&migrateCmd, &settlementCmd, &templateCmd)
 	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "", "config file to use. Defaults to .config.yml")
 
 	return &rootCmd
